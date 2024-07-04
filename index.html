@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Snowglobe</title>
+  <style>
+
+    
+    * { 
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+
+      display: flex;
+      flex-direction: column;
+
+
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden; 
+
+      justify-content: center;
+      align-items: center;
+    }
+
+    #snowglobe {
+
+      width: 85vmin;
+      height: 85vmin;
+
+
+
+      background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(126,12,126,1) 35%, rgba(0,212,255,1) 61%);
+      
+
+      border-radius: 100%;
+      overflow: hidden;
+
+      margin: auto;
+
+     
+      box-shadow: 0px 0px 20px 35px #FFFFFF05;
+    }
+
+    #particles {
+      height: 75%;
+      width: 100%;
+    }
+
+    #ground {
+      height: 25%;
+      width: 100%;
+      background: #bebebe;
+    }
+
+    @keyframes shake {
+      0%,
+      100% {
+        transform: rotate(0deg);
+      }
+
+      25% {
+        transform: rotate(15deg);
+      }
+
+      50% {
+        transform: rotate(-15deg);
+      }
+
+      75% {
+        transform: rotate(10deg);
+      }
+    }
+
+    .shake {
+      animation: shake 1s;
+    }
+
+
+
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
+
+
+</head>
+
+<body>
+  <div id="snowglobe">
+    <div id="particles"></div>
+    <div id="ground"></div>
+  </div>
+  <script>
+
+    let globe = document.getElementById("snowglobe");
+
+    let particles;
+   
+    function calculateAcceleration(event) {
+      const {x, y, z} = event.accelerationIncludingGravity;
+      const accelerationMagnitude = Math.sqrt(x * x + y * y + z * z);
+      return accelerationMagnitude;
+    }
+    tsParticles.loadJSON('particles', 'particles.json')
+      .then(function () {
+        
+        particles = tsParticles.domItem(0);
+        particles.pause()
+
+        globe.addEventListener('click', () => {
+          shakeItUp()
+        });
+
+        window.addEventListener("devicemotion", (event) => {
+          
+          const acceleration = calculateAcceleration(event);
+
+          if (acceleration > 23) {
+            shakeItUp()
+          }
+        });
+      });
+    function shakeItUp() {
+      particles.play();
+
+      globe.classList.add("shake")
+      setTimeout(() => {globe.classList.remove("shake")}, 1100)
+    }
+
+  </script>
+</body>
+</html>
